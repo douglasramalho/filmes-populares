@@ -12,8 +12,16 @@ import java.util.List;
 
 import br.com.douglasmotta.filmespopulares.R;
 import br.com.douglasmotta.filmespopulares.data.model.Filme;
+import br.com.douglasmotta.filmespopulares.data.network.ApiService;
+import br.com.douglasmotta.filmespopulares.data.network.response.FilmesResult;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListaFilmesActivity extends AppCompatActivity {
+
+    RecyclerView recyclerFilmes;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,34 +31,24 @@ public class ListaFilmesActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerFilmes = findViewById(R.id.recycler_filmes);
+        recyclerFilmes = findViewById(R.id.recycler_filmes);
 
-        RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerFilmes.setLayoutManager(linearLayoutManager);
-        recyclerFilmes.setAdapter(new ListaFilmesAdapter(criaFilmes()));
-    }
+        ApiService.getInstance()
+                .obterFilmesPopulares("14eccca2f4f59c89f4ea7ed06fd384d1")
+                .enqueue(new Callback<FilmesResult>() {
+                    @Override
+                    public void onResponse(Call<FilmesResult> call, Response<FilmesResult> response) {
+                        if (response.isSuccessful()) {
+                            RecyclerView.LayoutManager linearLayoutManager = new LinearLayoutManager(ListaFilmesActivity.this);
+                            recyclerFilmes.setLayoutManager(linearLayoutManager);
+                            recyclerFilmes.setAdapter(new ListaFilmesAdapter(response.body().getResultadoFilmes()));
+                        }
+                    }
 
-    private List<Filme> criaFilmes() {
-        return Arrays.asList(
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro"),
-            new Filme("Corações de ferro")
-        );
+                    @Override
+                    public void onFailure(Call<FilmesResult> call, Throwable t) {
+
+                    }
+                });
     }
 }

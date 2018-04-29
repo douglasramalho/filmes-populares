@@ -11,12 +11,13 @@ import java.util.List;
 
 import br.com.douglasmotta.filmespopulares.R;
 import br.com.douglasmotta.filmespopulares.data.model.Filme;
+import br.com.douglasmotta.filmespopulares.data.network.response.FilmesResponse;
 
 public class ListaFilmesAdapter extends RecyclerView.Adapter<ListaFilmesAdapter.ListaFilmesViewHolder> {
 
-    private List<Filme> filmes;
+    private List<FilmesResponse> filmes;
 
-    public ListaFilmesAdapter(List<Filme> filmes) {
+    public ListaFilmesAdapter(List<FilmesResponse> filmes) {
         this.filmes = filmes;
     }
 
@@ -30,7 +31,7 @@ public class ListaFilmesAdapter extends RecyclerView.Adapter<ListaFilmesAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ListaFilmesViewHolder holder, int position) {
-        holder.textTituloFilme.setText(filmes.get(position).getNome());
+        holder.textTituloFilme.setText(filmes.get(position).getTituloOriginal());
     }
 
     @Override
