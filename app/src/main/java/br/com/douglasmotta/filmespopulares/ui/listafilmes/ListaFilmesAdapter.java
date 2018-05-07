@@ -5,20 +5,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.douglasmotta.filmespopulares.R;
 import br.com.douglasmotta.filmespopulares.data.model.Filme;
-import br.com.douglasmotta.filmespopulares.data.network.response.FilmesResponse;
 
 public class ListaFilmesAdapter extends RecyclerView.Adapter<ListaFilmesAdapter.ListaFilmesViewHolder> {
 
-    private List<FilmesResponse> filmes;
+    private List<Filme> filmes;
 
-    public ListaFilmesAdapter(List<FilmesResponse> filmes) {
-        this.filmes = filmes;
+    public ListaFilmesAdapter() {
+        filmes = new ArrayList<>();
     }
 
     @NonNull
@@ -31,7 +34,7 @@ public class ListaFilmesAdapter extends RecyclerView.Adapter<ListaFilmesAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull ListaFilmesViewHolder holder, int position) {
-        holder.textTituloFilme.setText(filmes.get(position).getTituloOriginal());
+        holder.bind(filmes.get(position));
     }
 
     @Override
@@ -39,14 +42,28 @@ public class ListaFilmesAdapter extends RecyclerView.Adapter<ListaFilmesAdapter.
         return (filmes != null && filmes.size() > 0) ? filmes.size() : 0;
     }
 
+    public void adicionaFilmes(List<Filme> filmes) {
+        final int posicaoInicio = this.filmes.size();
+
+        this.filmes.addAll(filmes);
+        notifyItemRangeInserted(posicaoInicio, filmes.size());
+    }
+
     static class ListaFilmesViewHolder extends RecyclerView.ViewHolder {
 
+        private ImageView imagePosterFilme;
         private TextView textTituloFilme;
 
         public ListaFilmesViewHolder(View itemView) {
             super(itemView);
 
+            imagePosterFilme = itemView.findViewById(R.id.image_poster_filme);
             textTituloFilme = itemView.findViewById(R.id.text_titulo_filme);
+        }
+
+        public void bind(Filme filme) {
+            Picasso.get().load("https://image.tmdb.org/t/p/w300/" + filme.getCaminhoPoster()).into(imagePosterFilme);
+            textTituloFilme.setText(filme.getNome());
         }
     }
 }
