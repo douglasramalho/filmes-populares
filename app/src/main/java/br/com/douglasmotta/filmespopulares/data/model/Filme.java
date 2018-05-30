@@ -1,6 +1,8 @@
 package br.com.douglasmotta.filmespopulares.data.model;
 
-public class Filme {
+import java.io.Serializable;
+
+public class Filme implements Serializable {
 
     private final String titulo;
     private final String caminhoPoster;
